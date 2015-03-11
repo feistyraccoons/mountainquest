@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Entity : MonoBehaviour {
+public abstract class Entity : MonoBehaviour {
+
+	private int health;
 
 	// Use this for initialization
 	void Start () {
