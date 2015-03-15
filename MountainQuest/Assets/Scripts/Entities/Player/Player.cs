@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour {
+public class Player : Entity {
 
 
 	public bool isAiming = false;
@@ -20,7 +20,7 @@ public class Player : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () 
+	public override void Update () 
 	{
 		Vector3 mouse = Input.mousePosition;
 		mouse.z = 10;
@@ -85,9 +85,8 @@ public class Player : MonoBehaviour {
 				RedirectMade = false;
 				
 			}
-			
+		base.Update ();
 		}
-
 	}
 
 

@@ -20,8 +20,14 @@ public class HealthBar : MonoBehaviour
 	}
 	
 	void OnGUI() {
-		GUI.Box(new Rect(transform.position.x, transform.position.y+10, 10 + healthBarLength, 30), mHealth.m_fHealth + "/" + mHealth.m_fMaxHealth);
+//		GUI.Box(new Rect(transform.position.x, transform.position.y+10, 10 + healthBarLength, 30), mHealth.m_fHealth + "/" + mHealth.m_fMaxHealth);
+		Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position);
+		screenPosition.y = Screen.height - screenPosition.y;
+		
+		GUI.Box(new Rect(screenPosition.x-10,screenPosition.y-40,healthBarLength,20),mHealth.m_fHealth+"/"+mHealth.m_fMaxHealth);
 	}
+
+
 	
 	public void AddjustBar() {
 		healthBarLength = (Screen.width / 6) * (mHealth.m_fHealth / mHealth.m_fMaxHealth);

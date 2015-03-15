@@ -31,10 +31,11 @@ public abstract class Entity : MonoBehaviour {
 		}
 	}
 
-	void die()
+	protected void die()
 	{
 		// TODO die animation, sound, points ? etcetcetc
-		Destroy (this);
+		Debug.Log ("Die message received");
+		Destroy (this.gameObject);
 	}
 
 }

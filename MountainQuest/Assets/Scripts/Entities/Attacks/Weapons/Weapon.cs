@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent (typeof(Rigidbody2D))]
+
 public abstract class Weapon : MonoBehaviour
 {
 	public float m_fDamage = 1.0f,m_fSpeed = 5.0f;

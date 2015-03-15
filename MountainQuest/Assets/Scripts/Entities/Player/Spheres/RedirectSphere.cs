@@ -50,7 +50,6 @@ public class RedirectSphere : MonoBehaviour {
 		other.rigidbody2D.rotation = 0;
 		other.rigidbody2D.rotation = RotationDirection;
 		//other.transform.rotation = Quaternion.Euler (0, 0, RotationDirection);
-		print (RotationDirection);
 		if (proj != null)
 		{
 

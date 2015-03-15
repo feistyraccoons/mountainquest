@@ -2,6 +2,7 @@
 using System.Collections;
 
 [RequireComponent (typeof(AudioSource))]
+[RequireComponent (typeof(Rigidbody2D))]
 public class Projectile : Weapon
 {
 
