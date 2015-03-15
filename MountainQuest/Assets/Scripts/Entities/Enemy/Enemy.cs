@@ -1,0 +1,183 @@
+﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+[RequireComponent (typeof(Rigidbody2D))]
+[RequireComponent (typeof(CircleCollider2D))]
+public class Enemy : Entity
+{
+	// Movement
+	public enum MovementTypes
+	{
+		Idle,
+		Patrol,
+		Wander,
+		Seek
+	}
+	public MovementTypes activeMovement = MovementTypes.Patrol;
+	private Movement movement;
+
+	//Attack
+	private float changeAttackTimer = 0.0f;
+	public int changeMeleeAttackEvery = 5, changeRangedAttackEvery = 5;
+	private List<Sword> usableSwords;
+	private List<Projectile> usableProjectiles;
+	
+	// Melee
+	public 	MeleeAttack meleeAttack;
+	// Ranged
+	public  RangedAttack rangedAttack;
+
+	// Aggro
+	private bool aggro = false;
+	public CircleCollider2D safeArea;
+	public BoxCollider2D aggroArea;
+
+
+
+	// Use this for initialization
+	void Start ()
+	{
+
+		if (meleeAttack != null)
+		if (meleeAttack.theWeapons.Count > 1) {
+			usableSwords = new List<Sword> (meleeAttack.theWeapons.Count);
+		
+			
+			// Sort melee attacks 
+			for (int i = 0; i < meleeAttack.theWeapons.Count; i++) {
+				for (int j = 1; j < meleeAttack.theWeapons.Count; j++) {
+					if ((meleeAttack.theWeapons [j] as Sword).range > (meleeAttack.theWeapons [i] as Sword).range) {
+						Sword temp = meleeAttack.theWeapons [i] as Sword;
+						meleeAttack.theWeapons [i] = meleeAttack.theWeapons [j];
+						meleeAttack.theWeapons [j] = temp;
+					}
+				} 
+			}
+		}
+		if (rangedAttack != null)
+		if (rangedAttack.theWeapons.Count > 1) 
+			usableProjectiles = new List<Projectile> (rangedAttack.theWeapons.Count);
+
+
+		this.gameObject.AddComponent<PatrolMovement> ().enabled=false;
+		this.gameObject.AddComponent<WanderMovement> ().enabled=false;
+		this.gameObject.AddComponent<SeekMovement> ().enabled=false;
+		this.gameObject.AddComponent<IdleMovement> ().enabled=false;
+		movement = GetComponent<IdleMovement> ();
+		changeMovement(activeMovement);
+	}
+	
+	
+	// Update is called once per frame
+	public override void Update ()
+	{
+		if (aggro) {
+			if (!(activeMovement == MovementTypes.Seek))
+				changeMovement (MovementTypes.Seek);
+
+
+			if (meleeAttack != null) {
+				if (inMeleeRange ()) {
+
+					if (usableSwords.Count > 1) {
+						changeAttackTimer -= Time.deltaTime;
+						if (changeAttackTimer < 0.0f) {
+							meleeAttack.sword = usableSwords [usableSwords.BinarySearch (meleeAttack.sword) + 1];
+							changeAttackTimer = changeMeleeAttackEvery;
+						}
+					}
+					meleeAttack.Update ();
+				}
+			} else if (rangedAttack != null) {
+
+				if (rangedAttack.theWeapons.Count > 1) {
+					changeAttackTimer -= Time.deltaTime;
+						
+					if (changeAttackTimer < 0.0f) {
+						rangedAttack.projectile = usableProjectiles [Random.Range (0, usableProjectiles.Count)];
+						changeAttackTimer = changeRangedAttackEvery;
+					}
+				}
+				rangedAttack.Update ();
+			} 
+
+
+
+		} else {
+			changeMovement(activeMovement);
+			movement.Update ();
+		}	
+
+		base.Update ();
+	}
+
+	void changeMovement (MovementTypes newMovement)
+	{
+		foreach (Movement oldMove in GetComponents<Movement>()) 
+			oldMove.enabled = false;
+
+		activeMovement = newMovement;
+		switch (activeMovement) {
+		case MovementTypes.Patrol:
+			movement = this.gameObject.GetComponent<PatrolMovement> ();
+			break;
+		case MovementTypes.Wander:
+			movement = this.gameObject.GetComponent<WanderMovement> ();
+			break;
+		case MovementTypes.Seek:
+			movement = this.gameObject.GetComponent<SeekMovement> ();
+			break;
+		default:
+			movement = this.gameObject.GetComponent<IdleMovement> ();
+			break;
+		}
+	}
+	 
+	bool inMeleeRange ()
+	{
+		usableSwords.Clear ();
+		RaycastHit2D hit = Physics2D.Raycast (transform.position, -Vector2.up);
+		if (hit.collider != null && hit.collider.gameObject.tag == "Player") {
+
+			float distance1 = Mathf.Abs (hit.point.y - transform.position.y);
+			float distance2 = Vector2.Distance (hit.point, transform.position);
+
+			if (distance1 != distance2) 
+				Debug.LogWarning ("Distances are different (" + distance1 + " and " + distance2 + ")");
+
+			bool cascade = false;
+			for (int i = meleeAttack.theWeapons.Count-1; i >= 0; i--) {
+				if (cascade || distance1 <= (meleeAttack.theWeapons [i] as Sword).range) {
+					usableSwords.Add (meleeAttack.theWeapons [i] as Sword);
+					cascade = true;
+				}
+			}
+		}
+
+		return usableSwords.Count > 0;
+	}
+	
+	void OnTriggerEnter2D (Collider2D other)
+	{
+		if (aggroArea == other) 
+			aggro = true;
+	}
+
+	void OnTriggerExit2D (Collider2D other)
+	{
+		if (safeArea == other) 
+			aggro = true;
+	}
+	
+	void OnCollisionEnter2D (Collision2D coll)
+	{
+		Weapon proj = coll.gameObject.GetComponent<Weapon> ();
+		if (proj != null) {
+			health.takeDamage (proj.m_fDamage);
+			if (proj.GetComponent<Projectile> ())
+				Destroy (coll.gameObject);
+		}
+	}
+	
+}

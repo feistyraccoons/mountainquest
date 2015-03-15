@@ -46,9 +46,59 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Entities\Enemy.cs" />
+     <Compile Include="Assets\ROG_Assets\Prefabs\Other\Water\WaterAssets\WaterSimple.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\CameraFollow.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\ObjectSpawner.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\ROG.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Unit Scripts\Enemy_SideScroll.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Unit Scripts\Enemy_TopDown.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Unit Scripts\Player_Rigidbody.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Unit Scripts\Player_SideScroll.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Unit Scripts\Player_TopDown.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Unit Scripts\Player_TopDownBasic.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Utility\Billboard.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Utility\ClickToMove.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Utility\DestructableObject.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Utility\FlickeringLight.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Utility\FloatingText.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Utility\FloatingTextComponent.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Utility\HealthPickup.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Utility\Instructions.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Utility\MaterialTiling.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Utility\MeleeWeapon.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Utility\PulseTrap.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Utility\RotateAroundObject.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Utility\Sprite.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Utility\ToolTip.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Weapons\BaseWeapon.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Weapons\Bullet.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Weapons\Grenade.cs" />
+     <Compile Include="Assets\ROG_Assets\Scripts\Weapons\Gun.cs" />
+     <Compile Include="Assets\Scripts\Entities\Attacks\Attack.cs" />
+     <Compile Include="Assets\Scripts\Entities\Attacks\MeleeAttack.cs" />
+     <Compile Include="Assets\Scripts\Entities\Attacks\RangedAttack.cs" />
+     <Compile Include="Assets\Scripts\Entities\Attacks\Weapons\Projectile.cs" />
+     <Compile Include="Assets\Scripts\Entities\Attacks\Weapons\Sword.cs" />
+     <Compile Include="Assets\Scripts\Entities\Attacks\Weapons\Weapon.cs" />
+     <Compile Include="Assets\Scripts\Entities\Components\Health.cs" />
+     <Compile Include="Assets\Scripts\Entities\Components\HealthBar.cs" />
+     <Compile Include="Assets\Scripts\Entities\Enemy\Enemy.cs" />
+     <Compile Include="Assets\Scripts\Entities\Enemy\Movement\IdleMovement.cs" />
+     <Compile Include="Assets\Scripts\Entities\Enemy\Movement\Movement.cs" />
+     <Compile Include="Assets\Scripts\Entities\Enemy\Movement\PatrolMovement.cs" />
+     <Compile Include="Assets\Scripts\Entities\Enemy\Movement\SeekMovement.cs" />
+     <Compile Include="Assets\Scripts\Entities\Enemy\Movement\WanderMovement.cs" />
      <Compile Include="Assets\Scripts\Entities\Entity.cs" />
-     <Compile Include="Assets\Scripts\Entities\Player.cs" />
+     <Compile Include="Assets\Scripts\Entities\Player\Player.cs" />
+     <Compile Include="Assets\Scripts\Entities\Player\PlayerMovement.cs" />
+     <Compile Include="Assets\Scripts\Entities\Player\Spheres\BoostSphere.cs" />
+     <Compile Include="Assets\Scripts\Entities\Player\Spheres\RedirectSphere.cs" />
+     <Compile Include="Assets\Scripts\Level\BulletScript.cs" />
+     <Compile Include="Assets\Scripts\Level\FireWeaponScript.cs" />
+     <Compile Include="Assets\Scripts\Level\SpawnManager.cs" />
+     <None Include="Assets\ROG_Assets\Prefabs\Other\Shadow Projector\Projector Multiply.shader" />
+     <None Include="Assets\ROG_Assets\Materials\Shaders\Particle Alpha Blend (Queue +100).shader" />
+     <None Include="Assets\ROG_Assets\Prefabs\Other\Water\WaterAssets\FX-IslandWaterSimple.shader" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.2/UnityEngine.UI.dll</HintPath>
  </Reference>
