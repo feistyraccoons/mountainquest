@@ -3,32 +3,17 @@ using System.Collections;
 
 public class MeleeAttack : Attack
 {
-
+	[HideInInspector]
 	public Sword sword;
-	private GameObject attackCollider;
 
-	// Use this for initialization
-	void Start ()
-	{
+	void Start(){
 	
+		sword = GetComponentInChildren<Sword> ();
 	}
 
-	// Update is called once per frame
-	public override void Update ()
-	{
-
-	}
-
-	public void Swing ()
-	{
-		if (attackTimer <= 0) {
-			if (attackCollider != null)
-				Destroy (attackCollider.gameObject);
-			float right = GetComponent<Enemy>().facingRight?1:-1;
-			attackCollider = Instantiate (sword,rigidbody2D.position + new Vector2(1.5f*right,0) ,transform.rotation) as GameObject;
-//			if(attackCollider.transform.parent.Equals(null))
-//			attackCollider.transform.parent = GetComponent <Transform>();
-//			
-		}
+	public void swing(){
+		float right = GetComponent<Enemy>().facingRight?1:-1;
+		sword.transform.position = rigidbody2D.position + new Vector2 (2f * right, 0);
+//		sword.GetComponent<BoxCollider2D> ().enabled = true;
 	}
 }

@@ -7,28 +7,37 @@ public class Player : Entity
 	private float attackTimer = 0;
 	public Projectile arrow;
 	public bool isAiming = false;
+	public GameObject instructionsUI;
 	public GameObject ClickObj;
 	public GameObject ClickObjBoost;
 	private GameObject CreateRedirectSphere;
 	private GameObject CreateBoostSphere;
-	private bool RedirectMade = false, melee = false, facingRight = true;
+	private bool RedirectMade = false, melee = false,instructions=false;
 	public float SphereDistance = 21;
 	public float PlayerAliveTimer = 8.0f;
 	private int RSphereTotal = 0;
 	public int RSphereCap = 3;
 	private int BSphereTotal = 0;
 	public int BSphereCap = 3;
-
-	void Start ()
-	{
-	}
 	
+
 	public override void Update ()
 	{
+		if(instructionsUI!=null)
+		instructionsUI.SetActive (instructions);
+
+		if(Input.GetKeyDown(KeyCode.I))
+		   instructions=!instructions;
+
 		Vector3 mouse = Input.mousePosition;
 		mouse.z = 10;
 		Vector3 mPos = Camera.main.ScreenToWorldPoint (mouse);
 
+
+		if (!facingRight)
+			transform.Rotate (new Vector3(0,-180,0));
+		else
+			transform.Rotate (new Vector3(0,0,0));
 
 		if (rigidbody2D.velocity.x > 0)
 			facingRight = true;
@@ -52,11 +61,13 @@ public class Player : Entity
 		} else if (Input.GetMouseButtonDown (1) && RSphereTotal != RSphereCap) 
 			isAiming = true;
 
-		if (Input.GetKey (KeyCode.Alpha1)) 
+		if (Input.GetKey (KeyCode.Alpha1)) {
+			GameObject.FindGameObjectWithTag ("HUD").GetComponent<DisplaySelectedWeapon> ().UpdateMelee ();
 			melee = true;
-		else if (Input.GetKey (KeyCode.Alpha2)) 
+		} else if (Input.GetKey (KeyCode.Alpha2)) {
+			GameObject.FindGameObjectWithTag ("HUD").GetComponent<DisplaySelectedWeapon> ().UpdateRanged ();
 			melee = false;
-
+		}
 		attackTimer -= Time.deltaTime;
 		if (Input.GetMouseButton (0) && attackTimer <= 0) {
 			if (!melee) {
@@ -68,7 +79,6 @@ public class Player : Entity
 				ArrowDirection.Normalize ();
 				Projectile firedArrow = (Projectile)Instantiate (arrow, transform.position + (ArrowDirection * 2), Quaternion.Euler (new Vector3 (0, 0,Arrowangle )));
 				firedArrow.rigidbody2D.rotation = Arrowangle + 90;
-				print(Arrowangle);
 				
 				//firedArrow.Shoot (new Vector2 (facingRight ? 1 : -1, 0));
 				firedArrow.Shoot (ArrowDirection);
@@ -113,12 +123,16 @@ public class Player : Entity
 			CreateBoostSphere = null;
 			RedirectMade = false;
 		}
-				
+	
+
 		base.Update ();
 	
 	}
 	
-
+public float GetHP ()
+{
+	return health.m_fHealth;
+}
 	public void RemoveRSphere ()
 	{
 		RSphereTotal -= 1;

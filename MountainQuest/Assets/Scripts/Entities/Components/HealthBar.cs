@@ -5,7 +5,7 @@ using System.Collections;
 public class HealthBar : MonoBehaviour
 {
 	
-	public float healthBarLength;
+	public float healthBarLength = 10;
 	private Health mHealth;
 
 	void Start () {
@@ -21,10 +21,10 @@ public class HealthBar : MonoBehaviour
 		Vector3 screenPosition = Camera.main.WorldToScreenPoint(transform.position);
 		screenPosition.y = Screen.height - screenPosition.y;
 		
-		GUI.Box(new Rect(screenPosition.x-10,screenPosition.y-40,healthBarLength,20),mHealth.m_fHealth+"/"+mHealth.m_fMaxHealth);
+		GUI.Box(new Rect(screenPosition.x-10,screenPosition.y-40,healthBarLength+30,20),mHealth.m_fHealth+"/"+mHealth.m_fMaxHealth);
 	}
 	
 	public void AdjustBar() {
-		healthBarLength = (Screen.width / 6) * (mHealth.m_fHealth / mHealth.m_fMaxHealth);
+//		healthBarLength = (Screen.width / 6) * (mHealth.m_fHealth / mHealth.m_fMaxHealth);
 	}
 }

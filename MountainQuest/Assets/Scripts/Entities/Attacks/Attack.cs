@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 public class Attack : MonoBehaviour {
 	
-	public float attackSpeed = 1;
-	protected float attackTimer = 0;
+	public float attackTimer = 0;
+	protected float attackDecrease = 0;
 	public List<Weapon> theWeapons;
 
 	// Use this for initialization

@@ -37,7 +37,7 @@ public class Health : MonoBehaviour
 				if(m_fHealth<0)
 					m_fHealth=0;
 
-			if (m_fHealth == 0) 
+			if (m_fHealth <= 0) 
 				SendMessageUpwards ("die");
 
 		} else

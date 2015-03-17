@@ -23,7 +23,6 @@ public class BoostSphere : MonoBehaviour {
 		AliveTimer -= Time.deltaTime;
 		if (AliveTimer <= 0) {
 			Destroy (this.gameObject); 		
-			print (this.name);
 			Owner.GetComponent<Player>().RemoveBSphere();
 			
 		}
@@ -39,15 +38,14 @@ public class BoostSphere : MonoBehaviour {
 	{
 
 		Projectile proj = other.GetComponent<Projectile> ();
-		print (other.rigidbody2D.velocity);
-		if ((other.rigidbody2D.velocity.x < 32 && other.rigidbody2D.velocity.y < 32) && (other.rigidbody2D.velocity.x > -32 && other.rigidbody2D.velocity.y > -32)) {
-		other.rigidbody2D.velocity *= VelocityModifier;	
+		if (proj != null)
+			proj.m_fDamage *= DamageModifier;
+
+		if (other.rigidbody2D!=null) {
+			if ((other.rigidbody2D.velocity.x < 32 && other.rigidbody2D.velocity.y < 32) && (other.rigidbody2D.velocity.x > -32 && other.rigidbody2D.velocity.y > -32)) 
+				other.rigidbody2D.velocity *= VelocityModifier;	
 		}
 
-if (proj != null)
-		{
-			proj.m_fDamage *= DamageModifier;
-		}
 	}
 
 

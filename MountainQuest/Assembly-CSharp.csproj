@@ -83,12 +83,15 @@
      <Compile Include="Assets\Scripts\Entities\Components\Health.cs" />
      <Compile Include="Assets\Scripts\Entities\Components\HealthBar.cs" />
      <Compile Include="Assets\Scripts\Entities\Enemy\Enemy.cs" />
+     <Compile Include="Assets\Scripts\Entities\Enemy\Movement\BossMovement.cs" />
      <Compile Include="Assets\Scripts\Entities\Enemy\Movement\IdleMovement.cs" />
      <Compile Include="Assets\Scripts\Entities\Enemy\Movement\Movement.cs" />
      <Compile Include="Assets\Scripts\Entities\Enemy\Movement\PatrolMovement.cs" />
      <Compile Include="Assets\Scripts\Entities\Enemy\Movement\SeekMovement.cs" />
      <Compile Include="Assets\Scripts\Entities\Enemy\Movement\WanderMovement.cs" />
      <Compile Include="Assets\Scripts\Entities\Entity.cs" />
+     <Compile Include="Assets\Scripts\Entities\Player\ChangeWeapon.cs" />
+     <Compile Include="Assets\Scripts\Entities\Player\DisplaySelectedWeapon.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\Player.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\PlayerMovement.cs" />
      <Compile Include="Assets\Scripts\Entities\Player\Spheres\BoostSphere.cs" />

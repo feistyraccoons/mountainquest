@@ -16,7 +16,8 @@ public class RedirectSphere : MonoBehaviour {
 		AliveTimer -= Time.deltaTime;
 		if (AliveTimer <= 0) {
 			Destroy (this.gameObject);
-			Owner.GetComponent<Player>().RemoveRSphere();
+			if(Owner.GetComponent<Player>())
+				Owner.GetComponent<Player>().RemoveRSphere();
 			
 		}
 		if (AliveTimer<=2) {

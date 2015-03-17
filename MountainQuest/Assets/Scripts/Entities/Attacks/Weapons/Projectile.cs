@@ -34,7 +34,9 @@ public class Projectile : Weapon
 		}
 	}
 
-	void OnCollisionEnter2D(){
+	void OnCollisionEnter2D(Collision2D other){
+		if(other.gameObject.tag == "Enemy" || other.gameObject.tag == "Player")
+		other.gameObject.SendMessage ("takeDamage", this.m_fDamage);
 		Destroy (gameObject);
 	}
 

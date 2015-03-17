@@ -9,7 +9,6 @@ public abstract class Entity : MonoBehaviour {
 	public bool facingRight=false;
 	// Use this for initialization
 	public virtual void Start () {
-		health = gameObject.AddComponent<Health>();
 		if (health==null) {
 			Debug.LogError("Health not set");
 		}
@@ -39,7 +38,6 @@ public abstract class Entity : MonoBehaviour {
 	protected void die()
 	{
 		// TODO die animation, sound, points ? etcetcetc
-		Debug.Log ("Die message received");
 		Destroy (this.gameObject);
 	}
 

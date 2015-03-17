@@ -10,7 +10,7 @@ public class CameraFollow : MonoBehaviour
 	public float 				followSpeedDamping = 0.01f;
 	public GameObject	 		target;
 	public CameraPerspectives 	perspective = CameraPerspectives.TOP;
-	
+
 	void Start()
 	{
 		// The gameObject to follow (Default is object tagged as "Player")
