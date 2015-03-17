@@ -21,7 +21,8 @@ public class Enemy : Entity
 	//Attack
 	private float changeAttackTimer = 0.0f;
 	public int changeMeleeAttackEvery = 5, changeRangedAttackEvery = 5;
-	
+	private bool attacking = false;
+
 	// Melee
 	public 	MeleeAttack meleeAttack;
 	// Ranged
@@ -32,8 +33,12 @@ public class Enemy : Entity
 	public CircleCollider2D safeArea;
 
 	// Use this for initialization
-	void Start ()
+	public override void Start ()
 	{
+		if (meleeAttack != null)
+			meleeAttack.sword = meleeAttack.theWeapons [0] as Sword;
+		if (rangedAttack != null)
+			rangedAttack.projectile = rangedAttack.theWeapons [0] as Projectile;
 
 		defaultMovement = activeMovement;
 
@@ -44,7 +49,7 @@ public class Enemy : Entity
 
 		movement = GetComponent<IdleMovement> ();
 		changeMovement (activeMovement);
-
+		base.Start ();
 	}
 	
 	
@@ -57,18 +62,23 @@ public class Enemy : Entity
 
 
 			if (meleeAttack != null) {
-				if (inMeleeRange ()) {
-
-					if (availableSwords.Count > 1) {
-						changeAttackTimer -= Time.deltaTime;
-						if (changeAttackTimer < 0.0f) {
-							meleeAttack.sword = availableSwords [availableSwords.BinarySearch (meleeAttack.sword) + 1];
-							changeAttackTimer = changeMeleeAttackEvery;
-						}
+				if (rangedAttack != null)
+					rangedAttack.enabled = false;
+				changeAttackTimer -= Time.deltaTime;
+				if (changeAttackTimer < 0.0f) {
+					if (inMeleeRange ()) {
+						attacking=true;
+						if (meleeAttack.theWeapons.Count > 1) 
+							meleeAttack.sword = meleeAttack.theWeapons [Random.Range (0, meleeAttack.theWeapons.Count)] as Sword;
+						meleeAttack.enabled = true;
+						meleeAttack.Swing();
+						changeAttackTimer = changeMeleeAttackEvery;
 					}
-					meleeAttack.enabled = true;
-				} else
+				} else if(!attacking){
 					meleeAttack.enabled = false;
+					attacking=false;
+				}
+
 					
 			} else if (rangedAttack != null) {
 
@@ -76,20 +86,19 @@ public class Enemy : Entity
 					changeAttackTimer -= Time.deltaTime;
 						
 					if (changeAttackTimer < 0.0f) {
-						rangedAttack.projectile = availableProjectiles [Random.Range (0, availableProjectiles.Count)];
+						rangedAttack.projectile = rangedAttack.theWeapons [Random.Range (0, rangedAttack.theWeapons.Count)] as Projectile;
 						changeAttackTimer = changeRangedAttackEvery;
 					}
 				}
-//				rangedAttack.Update ();
 				rangedAttack.enabled = true;
 			} 
 
 
 
 		} else {
-			if (meleeAttack != null)
+			if (meleeAttack != null && !attacking)
 				meleeAttack.enabled = false;
-			if (rangedAttack != null)
+			if (rangedAttack != null  && !attacking)
 				rangedAttack.enabled = false;
 			if (activeMovement != defaultMovement)
 				changeMovement (defaultMovement);
@@ -100,7 +109,6 @@ public class Enemy : Entity
 
 	void changeMovement (MovementTypes newMovement)
 	{
-
 		movement.enabled = false;
 		activeMovement = newMovement;
 		switch (activeMovement) {
@@ -123,38 +131,45 @@ public class Enemy : Entity
 	 
 	bool inMeleeRange ()
 	{
-		availableSwords.Clear ();
+		bool inRange = false;
+		GameObject player = GameObject.FindGameObjectWithTag ("Player");
+		if (player != null) {
+//			RaycastHit2D hit = Physics2D.Raycast (transform.rigidbody2D.position, player.rigidbody2D.position);
+//			Debug.DrawRay(transform.rigidbody2D.position, player.rigidbody2D.position,Color.red);
 
-		RaycastHit2D hit = Physics2D.Raycast (transform.position,-Vector2.right,10.0f);
-		if (hit.collider != null && hit.collider.gameObject.tag == "Player") {
-
-			Debug.Log("Ray collided: "+hit.collider.gameObject);
-			float distance1 = Mathf.Abs (hit.point.x - transform.position.x);
-			float distance2 = Vector2.Distance (hit.point, transform.position);
-
-			if (distance1 != distance2) 
-				Debug.LogWarning ("Distances are different (" + distance1 + " and " + distance2 + ")");
-
-			bool cascade = false;
-			for (int i = meleeAttack.theWeapons.Count-1; i >= 0; i--) {
-				if (cascade || distance1 <= (meleeAttack.theWeapons [i] as Sword).range) {
-					availableSwords.Add (meleeAttack.theWeapons [i] as Sword);
-					cascade = true;
+			RaycastHit2D hit;
+			
+			if (Vector3.Distance (transform.position, player.transform.position) < meleeAttack.sword.m_fRange) {
+				Debug.DrawRay (transform.position, (player.rigidbody2D.transform.position - rigidbody2D.transform.position), Color.red);
+				hit = Physics2D.Raycast (rigidbody2D.transform.position, (player.rigidbody2D.transform.position - rigidbody2D.transform.position), meleeAttack.sword.m_fRange);
+				if (hit.collider != null) {
+					Debug.Log ("Ray collided: " + hit.collider);
+					inRange = true;
 				}
 			}
+//			if (hit.collider != null) {
+//				if (hit.collider.gameObject == player) {
+//					Debug.Log ("Collided  with palyer");
+//					Debug.Log ("Ray collided: " + hit.collider.gameObject);
+//					float distance1 = Mathf.Abs (hit.point.x - transform.position.x);
+//					float distance2 = Vector2.Distance (hit.point, transform.position);
+//
+//					if (distance1 != distance2) 
+//						Debug.LogWarning ("Distances are different (" + distance1 + " and " + distance2 + ")");
+//
+//					if (hit.distance < meleeAttack.sword.m_fRange) 
+//						inRange = true;
+//				}
+//			}
 		}
-
-		return availableSwords.Count > 0;
+		return inRange;
 	}
 	
 	void OnTriggerEnter2D (Collider2D other)
 	{
 		if (other.gameObject.tag == "Player") {
-			
-			if (other.GetComponent<BoxCollider2D> ()) {
+			if (other.GetComponent<BoxCollider2D> ()) 
 				aggro = true;
-				Debug.Log ("Collided with " + other.gameObject);
-			}
 		}
 	}
 

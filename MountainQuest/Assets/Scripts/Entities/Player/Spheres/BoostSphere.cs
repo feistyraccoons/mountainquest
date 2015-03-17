@@ -4,7 +4,7 @@ using System.Collections;
 public class BoostSphere : MonoBehaviour {
 
 	public float DamageModifier = 1.5f;
-	public float VelocityModifier = 5;
+	public float VelocityModifier = 1.5f;
 	public float AliveTimer = 7;
 	public bool isAiming = false;
 	public GameObject Sphere;
@@ -39,7 +39,10 @@ public class BoostSphere : MonoBehaviour {
 	{
 
 		Projectile proj = other.GetComponent<Projectile> ();
-		other.rigidbody2D.velocity *= VelocityModifier;
+		print (other.rigidbody2D.velocity);
+		if ((other.rigidbody2D.velocity.x < 32 && other.rigidbody2D.velocity.y < 32) && (other.rigidbody2D.velocity.x > -32 && other.rigidbody2D.velocity.y > -32)) {
+		other.rigidbody2D.velocity *= VelocityModifier;	
+		}
 
 if (proj != null)
 		{

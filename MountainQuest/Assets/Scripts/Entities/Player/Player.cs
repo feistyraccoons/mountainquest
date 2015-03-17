@@ -60,8 +60,19 @@ public class Player : Entity
 		attackTimer -= Time.deltaTime;
 		if (Input.GetMouseButton (0) && attackTimer <= 0) {
 			if (!melee) {
-				Projectile firedArrow = (Projectile)Instantiate (arrow, transform.position + new Vector3 (facingRight ? 1 : -1, 0, 0), transform.rotation);
-				firedArrow.Shoot (new Vector2 (facingRight ? 1 : -1, 0));
+				Vector3 ArrowDirection = mPos - transform.position;
+				float Arrowangle = Vector3.Angle (ArrowDirection, new Vector3 (0, 1, 0));
+				Vector3 Arrowcross = Vector3.Cross (ArrowDirection, new Vector3 (0, 1, 0));
+				if (Arrowcross.z > 0)
+					Arrowangle = 360 - Arrowangle;
+				ArrowDirection.Normalize ();
+				Projectile firedArrow = (Projectile)Instantiate (arrow, transform.position + (ArrowDirection * 2), Quaternion.Euler (new Vector3 (0, 0,Arrowangle )));
+				firedArrow.rigidbody2D.rotation = Arrowangle + 90;
+				print(Arrowangle);
+				
+				//firedArrow.Shoot (new Vector2 (facingRight ? 1 : -1, 0));
+				firedArrow.Shoot (ArrowDirection);
+				
 			}
 			attackTimer = attackRate;
 		}

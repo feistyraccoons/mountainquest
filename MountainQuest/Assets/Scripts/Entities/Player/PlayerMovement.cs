@@ -5,8 +5,8 @@ using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
 
-	public float maxSpeed = 1.0f;
-	public float jumpSpeed = 1;
+	public float maxSpeed = 8.0f;
+	public float jumpSpeed = 12.0f;
 	private bool onGround = false;
 	private Vector2 preserveUp;
 

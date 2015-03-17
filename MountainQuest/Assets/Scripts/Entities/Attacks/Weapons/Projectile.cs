@@ -26,7 +26,7 @@ public class Projectile : Weapon
 			aSource.PlayOneShot (explode);	
 	}
 
-	public void Shoot(Vector2 _velocity)
+	public void Shoot(Vector3 _velocity)
 	{
 		rigidbody2D.velocity = _velocity *  m_fSpeed ;
 		if (create != null) {

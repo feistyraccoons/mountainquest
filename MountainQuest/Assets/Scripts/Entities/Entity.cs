@@ -6,18 +6,23 @@ public abstract class Entity : MonoBehaviour {
 
 	public Health health;
 	public bool showHealthBar=true;
+	public bool facingRight=false;
 	// Use this for initialization
-	void Start () {
-			Debug.LogError("Start hit");
-		
+	public virtual void Start () {
 		health = gameObject.AddComponent<Health>();
 		if (health==null) {
 			Debug.LogError("Health not set");
 		}
+		gameObject.AddComponent<HealthBar>();
 	}
 	
 	// Update is called once per frame
 	public virtual void Update () {
+		if (rigidbody2D.velocity.x > 0)
+			facingRight = true;
+		else if (rigidbody2D.velocity.x < 0)
+			facingRight = false;
+
 		if (rigidbody2D.position.x < -2 || rigidbody2D.position.y < -2 ) {
 			Destroy(gameObject);
 		}
