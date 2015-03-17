@@ -16,7 +16,7 @@ public class Projectile : Weapon
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	public override void Update ()
 	{
 	}
 
@@ -28,10 +28,15 @@ public class Projectile : Weapon
 
 	public void Shoot(Vector2 _velocity)
 	{
-		rigidbody2D.velocity = _velocity * m_fSpeed * Time.deltaTime;
-				if (create != null) {
+		rigidbody2D.velocity = _velocity *  m_fSpeed ;
+		if (create != null) {
 			aSource.PlayOneShot (create);
 		}
 	}
+
+	void OnCollisionEnter2D(){
+		Destroy (gameObject);
+	}
+
 
 }

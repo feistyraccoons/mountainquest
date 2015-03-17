@@ -53,5 +53,12 @@ public class CameraFollow : MonoBehaviour
 		
 		transform.position = Vector3.Lerp(transform.position, newPosition, Time.deltaTime/followSpeedDamping);
 		transform.rotation = newRotation;
+
+		if (transform.position.x < 11) 
+			transform.position = new Vector3(11,transform.position.y,-10);
+		if (transform.position.y < 9.4f) 
+			transform.position = new Vector3(transform.position.x,9.4f,-10);
+		if (transform.position.y > 31.8f) 
+			transform.position = new Vector3(transform.position.x, 31.8f,-10);
 	}
 }

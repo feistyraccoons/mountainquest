@@ -4,7 +4,7 @@ using System.Collections;
 
 public abstract class Weapon : MonoBehaviour
 {
-	public float m_fDamage = 1.0f,m_fSpeed = 5.0f;
+	public float m_fDamage = 10.0f,m_fSpeed = 5.0f;
 	// Use this for initialization
 	void Start ()
 	{
@@ -12,7 +12,7 @@ public abstract class Weapon : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	public virtual void Update ()
 	{
 	
 	}

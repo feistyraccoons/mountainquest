@@ -5,9 +5,9 @@ using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
 
-	public float maxSpeed = 0.2f;
+	public float maxSpeed = 1.0f;
 	public float jumpSpeed = 1;
-	private bool onGround = true;
+	private bool onGround = false;
 	private Vector2 preserveUp;
 
 	// Use this for initialization
@@ -18,15 +18,17 @@ public class PlayerMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+
+		rigidbody2D.velocity = new Vector2 (Input.GetAxis ("Horizontal")* 10,rigidbody2D.velocity .y);
+
+
 		if (onGround && Input.GetAxis ("Vertical") > 0) {
 			rigidbody2D.velocity = new Vector2 (rigidbody2D.velocity.x, jumpSpeed);
 		}
 
-		rigidbody2D.velocity += Input.GetAxis ("Horizontal") * new Vector2 (1, 0);
-		if (rigidbody2D.velocity.x > maxSpeed)
-			rigidbody2D.velocity = new Vector2 (maxSpeed, rigidbody2D.velocity.y);
-		else if (rigidbody2D.velocity.x < -maxSpeed)
-			rigidbody2D.velocity = new Vector2 (-maxSpeed, rigidbody2D.velocity.y);
+
+		if (Mathf.Abs( rigidbody2D.velocity.x) > maxSpeed)
+			rigidbody2D.velocity = new Vector2 (rigidbody2D.velocity.normalized.x * maxSpeed,rigidbody2D.velocity.y);
 
 		transform.up = preserveUp;
 	}

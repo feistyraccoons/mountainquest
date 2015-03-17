@@ -14,14 +14,13 @@ public class Enemy : Entity
 		Wander,
 		Seek
 	}
+	private MovementTypes defaultMovement;
 	public MovementTypes activeMovement = MovementTypes.Idle;
-	private Movement movement;
+	private Movement movement; 
 
 	//Attack
 	private float changeAttackTimer = 0.0f;
 	public int changeMeleeAttackEvery = 5, changeRangedAttackEvery = 5;
-	private List<Sword> availableSwords;
-	private List<Projectile> availableProjectiles;
 	
 	// Melee
 	public 	MeleeAttack meleeAttack;
@@ -36,37 +35,16 @@ public class Enemy : Entity
 	void Start ()
 	{
 
-		if (meleeAttack != null) {
-			availableSwords = new List<Sword> (meleeAttack.theWeapons.Count);
-				
-			if (meleeAttack.theWeapons.Count > 1) {
-		
-			
-				// Sort melee attacks 
-				for (int i = 0; i < meleeAttack.theWeapons.Count; i++) {
-					for (int j = 1; j < meleeAttack.theWeapons.Count; j++) {
-						if ((meleeAttack.theWeapons [j] as Sword).range > (meleeAttack.theWeapons [i] as Sword).range) {
-							Sword temp = meleeAttack.theWeapons [i] as Sword;
-							meleeAttack.theWeapons [i] = meleeAttack.theWeapons [j];
-							meleeAttack.theWeapons [j] = temp;
-						}
-					} 
-				}
-			}
+		defaultMovement = activeMovement;
 
-		}
-		if (rangedAttack != null) {
-			if (rangedAttack.theWeapons.Count > 1) 
-				availableProjectiles = new List<Projectile> (rangedAttack.theWeapons.Count);
+		this.gameObject.AddComponent<PatrolMovement> ().enabled = false;
+		this.gameObject.AddComponent<WanderMovement> ().enabled = false;
+		this.gameObject.AddComponent<SeekMovement> ().enabled = false;
+		this.gameObject.AddComponent<IdleMovement> ().enabled = false;
 
+		movement = GetComponent<IdleMovement> ();
+		changeMovement (activeMovement);
 
-			this.gameObject.AddComponent<PatrolMovement> ().enabled = false;
-			this.gameObject.AddComponent<WanderMovement> ().enabled = false;
-			this.gameObject.AddComponent<SeekMovement> ().enabled = false;
-			this.gameObject.AddComponent<IdleMovement> ().enabled = false;
-			movement = GetComponent<IdleMovement> ();
-			changeMovement (activeMovement);
-		}
 	}
 	
 	
@@ -88,8 +66,10 @@ public class Enemy : Entity
 							changeAttackTimer = changeMeleeAttackEvery;
 						}
 					}
-					meleeAttack.Update ();
-				}
+					meleeAttack.enabled = true;
+				} else
+					meleeAttack.enabled = false;
+					
 			} else if (rangedAttack != null) {
 
 				if (rangedAttack.theWeapons.Count > 1) {
@@ -100,14 +80,19 @@ public class Enemy : Entity
 						changeAttackTimer = changeRangedAttackEvery;
 					}
 				}
-				rangedAttack.Update ();
+//				rangedAttack.Update ();
+				rangedAttack.enabled = true;
 			} 
 
 
 
 		} else {
-			changeMovement(activeMovement);
-			movement.Update ();
+			if (meleeAttack != null)
+				meleeAttack.enabled = false;
+			if (rangedAttack != null)
+				rangedAttack.enabled = false;
+			if (activeMovement != defaultMovement)
+				changeMovement (defaultMovement);
 		}	
 
 		base.Update ();
@@ -115,9 +100,8 @@ public class Enemy : Entity
 
 	void changeMovement (MovementTypes newMovement)
 	{
-		if (newMovement!=activeMovement) {
-			
-		Debug.Log("Movement AI Changed: from "+activeMovement+" to "+newMovement);
+
+		movement.enabled = false;
 		activeMovement = newMovement;
 		switch (activeMovement) {
 		case MovementTypes.Patrol:
@@ -133,16 +117,19 @@ public class Enemy : Entity
 			movement = this.gameObject.GetComponent<IdleMovement> ();
 			break;
 		}
-		}
+		movement.enabled = true;
+
 	}
 	 
 	bool inMeleeRange ()
 	{
 		availableSwords.Clear ();
-		RaycastHit2D hit = Physics2D.Raycast (transform.position, -Vector2.up);
+
+		RaycastHit2D hit = Physics2D.Raycast (transform.position,-Vector2.right,10.0f);
 		if (hit.collider != null && hit.collider.gameObject.tag == "Player") {
 
-			float distance1 = Mathf.Abs (hit.point.y - transform.position.y);
+			Debug.Log("Ray collided: "+hit.collider.gameObject);
+			float distance1 = Mathf.Abs (hit.point.x - transform.position.x);
 			float distance2 = Vector2.Distance (hit.point, transform.position);
 
 			if (distance1 != distance2) 
@@ -162,14 +149,21 @@ public class Enemy : Entity
 	
 	void OnTriggerEnter2D (Collider2D other)
 	{
-		if (other.GetComponent<BoxCollider2D>()) 
-			aggro = true;
+		if (other.gameObject.tag == "Player") {
+			
+			if (other.GetComponent<BoxCollider2D> ()) {
+				aggro = true;
+				Debug.Log ("Collided with " + other.gameObject);
+			}
+		}
 	}
 
 	void OnTriggerExit2D (Collider2D other)
 	{
-		if (other.GetComponent<BoxCollider2D>()) 
-			aggro = false;
+		if (other.gameObject.tag == "Player") {
+			if (other.GetComponent<BoxCollider2D> ()) 
+				aggro = false;
+		}
 	}
 	
 	void OnCollisionEnter2D (Collision2D coll)
@@ -178,8 +172,6 @@ public class Enemy : Entity
 		if (proj != null) {
 			aggro = true;
 			health.takeDamage (proj.m_fDamage);
-			if (proj.GetComponent<Projectile> ())
-				Destroy (coll.gameObject);
 		}
 	}
 	

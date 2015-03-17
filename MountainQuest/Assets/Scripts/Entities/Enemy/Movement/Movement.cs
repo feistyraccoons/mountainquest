@@ -7,7 +7,6 @@ public class Movement: MonoBehaviour {
 	public bool dir;
 	public float speed = 2.5f;
 	public Vector3 preserveup;
-//	public Vector3 Movevec;
 	public Vector3 trueup;
 	public float delayreac = 0.1f;
 	protected GameObject ground = null;

@@ -4,7 +4,6 @@ using System.Collections;
 public class SeekMovement : Movement {
 
 	public GameObject target = null;
-	public float aggrotimer = 0.0f;
 	public bool wallhit = false;
 
 	// Use this for initialization
@@ -15,11 +14,6 @@ public class SeekMovement : Movement {
 	
 	// Update is called once per frame
 	public override void Update () {
-
-		aggrotimer -= Time.deltaTime;
-
-		if (aggrotimer <= 0.0f)
-			target = null;
 
 		if (target != null && ground != null) {
 			rigidbody2D.velocity = new Vector2(
@@ -53,14 +47,12 @@ public class SeekMovement : Movement {
 	void OnTriggerEnter2D(Collider2D coll){
 		if (coll.gameObject.tag == "Player") {
 			target = coll.gameObject;
-			aggrotimer = 3.0f;
 		}
 	}
 
 	void OnTriggerStay2D(Collider2D coll){
 		if (coll.gameObject.tag == "Player") {
 			target = coll.gameObject;
-			aggrotimer = 3.0f;
 		}
 	}
 

@@ -33,7 +33,7 @@ public class WanderMovement : Movement {
 			delayreac = 0.1f;
 			this.transform.up = trueup;
 		} else if (coll.gameObject.tag == "Wall") {
-			transform.position -= (Vector3)rigidbody2D.velocity;
+			transform.position -= (Vector3)rigidbody2D.velocity * Time.deltaTime;
 			dir = !dir;
 		}
 	}
